@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 export class ImageGallery extends Component {
   state = {
     images: [],
+    page: 1
   };
 
   async componentDidMount() {
@@ -22,12 +23,14 @@ export class ImageGallery extends Component {
     }
   }
 
-  async componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(_, prevState) {
     try {
-      const query = this.props.query;
-      if (prevProps.query !== query) {
+      const page = this.state.page;
+      
+      if (prevState.page !== page)
+        {
         this.props.loadingStatus(true);
-        const images = await fetchImagesWithQuery(query);
+        const images = await fetchImagesWithQuery(page);
         this.setState({ images: [...images] });
         this.props.loadingStatus(false);
       }

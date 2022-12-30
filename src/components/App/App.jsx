@@ -27,21 +27,10 @@ export class App extends Component {
   LoadMore = () => {
     this.setState(prevState => ({
       page: prevState.page +1
-  }))
+    }))
+    console.log(this.state.page)
   }
-  async componentDidUpdate(_, prevState) {
-    try {
-      if (
-        prevState.page !== this.state.page ||
-        prevState.query !== this.state.query
-      ) {
-        const images = await fetchImagesWithQuery(this.props.page);
-        this.setState({ images });
-      }
-    } catch (error) {
-      return toast.error('Whoops, something went wrong: ', error.message);
-    }
-  }
+
 
   
   render() {
@@ -53,10 +42,11 @@ export class App extends Component {
           <ImageGallery
             query={this.state.query}
             loadingStatus={this.handleLoading}
+            page={this.state.page}
           />
         )}
         {isLoading && <Loader />}
-        {this.state.query.length > 0 && <Button onSubmit={this.LoadMore} />}
+        {this.state.query.length > 0 && <Button onClick={this.LoadMore} />}
         <ToastContainer autoClose={3000} />
       </AppStyled>
     );
