@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { IconButton } from './IconButton/IconButton';
-import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import css from '../styles.module.css'
 export class Searchbar extends Component {
     state = {
@@ -20,10 +18,10 @@ export class Searchbar extends Component {
 
         if (this.state.query.trim() === '') {
             console.log("Hey")
-
+        };
             this.props.onSubmit(this.state.query);
             this.resetForm();
-        };
+        
     }
 
     resetForm = () => {
@@ -33,9 +31,6 @@ export class Searchbar extends Component {
         return (
             <header className={css.Searchbar}>
                 <form className={css.SearchForm} onSubmit={this.handleSubmit}>
-                    <IconButton aria-label="Search">
-                        <SearchIcon width="24" height="24" />
-                    </IconButton>
                     <input
                         className={css.SearchForminput}
                         type="text"
