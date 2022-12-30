@@ -3,13 +3,16 @@ import { ToastContainer } from 'react-toastify';
 import { Loader } from 'components/Loader/Loader';
 import { AppStyled } from './App.styled';
 import { Searchbar } from 'components/Searchbar/Searchbar';
+import fetchImagesWithQuery from 'services/api';
 import { ImageGallery } from 'components/ImageGallery/ImageGallery';
 import { Button } from 'components/Button/Button';
+import { toast } from 'react-toastify';
 
 export class App extends Component {
   state = {
     query: '',
     isLoading: false,
+    page:1
   };
 
   handleQuery = query => {
@@ -20,6 +23,27 @@ export class App extends Component {
     this.setState({ isLoading });
   };
 
+
+  LoadMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page +1
+  }))
+  }
+  async componentDidUpdate(_, prevState) {
+    try {
+      if (
+        prevState.page !== this.state.page ||
+        prevState.query !== this.state.query
+      ) {
+        const images = await fetchImagesWithQuery(this.props.page);
+        this.setState({ images });
+      }
+    } catch (error) {
+      return toast.error('Whoops, something went wrong: ', error.message);
+    }
+  }
+
+  
   render() {
     const { isLoading } = this.state;
     return (
@@ -32,7 +56,7 @@ export class App extends Component {
           />
         )}
         {isLoading && <Loader />}
-        <Button />
+        {this.state.query.length > 0 && <Button onSubmit={this.LoadMore} />}
         <ToastContainer autoClose={3000} />
       </AppStyled>
     );
