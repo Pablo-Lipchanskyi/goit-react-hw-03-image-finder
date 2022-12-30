@@ -1,50 +1,63 @@
 import React, { Component } from 'react';
-import css from '../styles.module.css'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {
+  SearchbarStyled,
+  SearchFormStyled,
+  // SearchFormButtonStyled,
+  // SearchFormButtonLabelStyled,
+  SearchFormInputStyled,
+} from './Searchbar.styled';
+import { IconButton } from './IconButton/IconButton';
+import { ReactComponent as SearchIcon } from '../../icons/search.svg';
+
 export class Searchbar extends Component {
-    state = {
-        query: '',
-    };
+  state = {
+    query: '',
+  };
 
-    handleInputChange = event => {
-        const { value } = event.currentTarget;
+  handleInputChange = event => {
+    const { value } = event.currentTarget;
 
-        this.setState({
-            query: value.toLowerCase(),
-        });
-    };
+    this.setState({
+      query: value.toLowerCase(),
+    });
+  };
 
-    handleSubmit = event => {
-        event.preventDefault();
+  handleSubmit = event => {
+    event.preventDefault();
 
-        if (this.state.query.trim() === '') {
-            console.log("Hey")
-        };
-            this.props.onSubmit(this.state.query);
-            this.resetForm();
-        
+    if (this.state.query.trim() === '') {
+      toast.warn('Please enter a search term');
+      return;
     }
 
-    resetForm = () => {
-        this.setState({ query: '' });
-    };
-    render() {
-        return (
-            <header className={css.Searchbar}>
-                <form className={css.SearchForm} onSubmit={this.handleSubmit}>
-                    <input
-                        className={css.SearchForminput}
-                        type="text"
-                        autoComplete="off"
-                        value={this.state.query}
-                        onChange={this.handleInputChange}
-                        autoFocus
-                        placeholder="Search images and photos"
-                    />
-                    <button type="submit" className={css.SearchFormbutton}>
-                        <span className={css.SearchFormbuttonlabel}>Search</span>
-                    </button>
-                </form>
-            </header>
-        )
-    }
+    this.props.onSubmit(this.state.query);
+    this.resetForm();
+  };
+
+  resetForm = () => {
+    this.setState({ query: '' });
+  };
+
+  render() {
+    return (
+      <SearchbarStyled>
+        <SearchFormStyled onSubmit={this.handleSubmit}>
+          <IconButton aria-label="Search">
+            <SearchIcon width="24" height="24" />
+          </IconButton>
+
+          <SearchFormInputStyled
+            type="text"
+            autoComplete="off"
+            autoFocus
+            value={this.state.query}
+            onChange={this.handleInputChange}
+            placeholder="Search images and photos"
+          />
+        </SearchFormStyled>
+      </SearchbarStyled>
+    );
+  }
 }

@@ -1,7 +1,9 @@
+import { ImageGalleryItemStyled } from './ImageGalleryItem.styled';
+
 export const ImageGalleryItem = ({ image }) => {
   return (
-    <li>
+    <ImageGalleryItemStyled>
       <img src={image.webformatURL} alt={image.id} />
-    </li>
+    </ImageGalleryItemStyled>
   );
 };

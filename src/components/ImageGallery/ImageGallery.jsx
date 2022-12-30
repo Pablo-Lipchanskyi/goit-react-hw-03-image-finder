@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import fetchImagesWithQuery from '../services/API.js';
+import fetchImagesWithQuery from 'services/api';
+import { ImageGalleryStyled } from './ImageGallery.styled';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
+import { toast } from 'react-toastify';
 
 export class ImageGallery extends Component {
   state = {
     images: [],
-    error: null,
   };
 
   async componentDidMount() {
@@ -15,7 +16,7 @@ export class ImageGallery extends Component {
       const images = await fetchImagesWithQuery(query);
       this.setState({ images });
     } catch (error) {
-      this.setState({error})
+      return toast.error('Whoops, something went wrong: ', error.message);
     } finally {
       this.props.loadingStatus(false);
     }
@@ -31,19 +32,18 @@ export class ImageGallery extends Component {
         this.props.loadingStatus(false);
       }
     } catch (error) {
-      
+      return toast.error('Whoops, something went wrong: ', error.message);
     }
   }
 
   render() {
-    const { images,error } = this.state;
+    const { images } = this.state;
     return (
-      <>
-        {error && <p>Whoops, something went wrong: {error.message}</p>}
+      <ImageGalleryStyled>
         {images.map(image => (
           <ImageGalleryItem key={image.id} image={image} />
         ))}
-      </>
+      </ImageGalleryStyled>
     );
   }
 }

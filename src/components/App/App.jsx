@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import css from './styles.module.css'
-import { Searchbar } from "./Searchbar/Searchbar";
-import { ImageGallery } from './ImageGallery/ImageGallery';
-import { Button } from './Button/Button';
-import { Loader } from './Loader/Loader';
+import { ToastContainer } from 'react-toastify';
+import { Loader } from 'components/Loader/Loader';
+import { AppStyled } from './App.styled';
+import { Searchbar } from 'components/Searchbar/Searchbar';
+import { ImageGallery } from 'components/ImageGallery/ImageGallery';
+import { Button } from 'components/Button/Button';
+
 export class App extends Component {
   state = {
     query: '',
@@ -11,15 +13,17 @@ export class App extends Component {
   };
 
   handleQuery = query => {
-    this.setState({ query })
+    this.setState({ query });
   };
+
   handleLoading = isLoading => {
     this.setState({ isLoading });
   };
+
   render() {
     const { isLoading } = this.state;
     return (
-      <div className={css.App}>
+      <AppStyled>
         <Searchbar onSubmit={this.handleQuery} />
         {this.state.query && (
           <ImageGallery
@@ -28,8 +32,9 @@ export class App extends Component {
           />
         )}
         {isLoading && <Loader />}
-        <Button/>
-      </div>
-    )
+        <Button />
+        <ToastContainer autoClose={3000} />
+      </AppStyled>
+    );
   }
 }
