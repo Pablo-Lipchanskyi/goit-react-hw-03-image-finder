@@ -1,15 +1,33 @@
 import axios from 'axios';
-import { toast } from 'react-toastify';
-const API_KEY = '32461128-4a9834d8affa3b6b2034fc7e6';
+const URL = 'https://pixabay.com/api/';
+const PIXABAY_API_KEY = '32461128-4a9834d8affa3b6b2034fc7e6';
+const IMAGE_TYPE = 'photo';
+const ORIENTATION = 'horizontal';
+const SAFESEARCH = 'true';
+export const PER_PAGE = 15;
 
-axios.defaults.baseURL = 'https://pixabay.com';
+// axios.defaults.baseURL = 'https://pixabay.com/api/';
 
-async function fetchImagesWithQuery(searchQuery,page=1) {
-  const response = await axios.get(
-    `/api/?q=${searchQuery}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=15`
-  );
-  response.data.hits.length === 0 && toast.error('No matches :(');
-  return response.data.hits;
-}
+export const searchImage = async (query, page) => {
+  try {
+    const searchParams = new URLSearchParams({
+      key: PIXABAY_API_KEY,
+      image_type: IMAGE_TYPE,
+      orientation: ORIENTATION,
+      safesearch: SAFESEARCH,
+      per_page: PER_PAGE,
+      page: page,
+      q: query,
+    });
 
-export default fetchImagesWithQuery;
+    const url = `${URL}?${searchParams}`;
+    const response = await axios.get(url);
+    if (!response.status) {
+      throw new Error('Something goes wrong');
+    }
+
+    return response.data;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
